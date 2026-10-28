@@ -1,0 +1,70 @@
+{
+  "crawl": [
+    "f1visa"
+  ],
+  "sources": [
+    {
+      "id": "1r6p9k0",
+      "kind": "thread",
+      "label": "r/f1visa: OPT/STEM OPT Processing Timelines Megathread (Spring/Summer 2026)",
+      "url": "https://www.reddit.com/r/f1visa/comments/1r6p9k0/",
+      "subreddit": "f1visa"
+    },
+    {
+      "id": "1qz1n7j",
+      "kind": "thread",
+      "label": "r/USCIS: 2026 OPT/STEM OPT timelines megathread",
+      "url": "https://www.reddit.com/r/USCIS/comments/1qz1n7j/",
+      "subreddit": "USCIS"
+    },
+    {
+      "id": "1tqdem4",
+      "kind": "thread",
+      "label": "r/f1visa: March 2026 OPT timelines megathread",
+      "url": "https://www.reddit.com/r/f1visa/comments/1tqdem4/",
+      "subreddit": "f1visa"
+    },
+    {
+      "id": "1ukprlk",
+      "kind": "thread",
+      "label": "r/f1visa: card production tracking, June 2026 approvals",
+      "url": "https://www.reddit.com/r/f1visa/comments/1ukprlk/",
+      "subreddit": "f1visa"
+    },
+    {
+      "id": "1of7n45",
+      "kind": "thread",
+      "label": "r/f1visa: OPT Processing Timelines Fall 2025",
+      "url": "https://www.reddit.com/r/f1visa/comments/1of7n45/",
+      "subreddit": "f1visa"
+    },
+    {
+      "id": "1okaxl1",
+      "kind": "thread",
+      "label": "r/f1visa: Oct/Nov 2025 F1 OPT EAD Timelines Megathread",
+      "url": "https://www.reddit.com/r/f1visa/comments/1okaxl1/",
+      "subreddit": "f1visa"
+    },
+    {
+      "id": "1o9bwv5",
+      "kind": "thread",
+      "label": "r/f1visa: STEM OPT Extension EAD Tracking Thread 2025",
+      "url": "https://www.reddit.com/r/f1visa/comments/1o9bwv5/",
+      "subreddit": "f1visa"
+    },
+    {
+      "id": "1m84yfm",
+      "kind": "thread",
+      "label": "r/USCIS: 2025 OPT processing timeline (continued)",
+      "url": "https://www.reddit.com/r/USCIS/comments/1m84yfm/",
+      "subreddit": "USCIS"
+    },
+    {
+      "id": "1i6230k",
+      "kind": "thread",
+      "label": "r/USCIS: 2025 OPT Processing timeline",
+      "url": "https://www.reddit.com/r/USCIS/comments/1i6230k/",
+      "subreddit": "USCIS"
+    }
+  ]
+}

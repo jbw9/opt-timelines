@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; form-action 'none'; base-uri 'none'">
+<title>OPT Timelines</title>
+<meta name="description" content="How long OPT and STEM OPT approvals are taking, from timelines people post on Reddit. Every data point links to its source comment.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2317202c'/%3E%3Ccircle cx='10' cy='20' r='3.5' fill='%232a78d6'/%3E%3Ccircle cx='17' cy='13' r='3.5' fill='%23eb6834'/%3E%3Cpath d='M24 7l4 4-4 4-4-4z' fill='%231baf7a'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:wght@400;600;800&display=swap">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<main class="wrap">
+  <header class="hero">
+    <h1>How long OPT approvals are taking</h1>
+    <p class="fresh" id="freshness" aria-live="polite">Loading reports…</p>
+  </header>
+
+  <div class="tiles" id="tiles"></div>
+
+  <div class="filters" role="group" aria-label="Filter reports">
+    <label>Show
+      <select id="f-cat">
+        <option value="all">Everyone</option>
+        <option value="opt">OPT, regular</option>
+        <option value="stem">STEM OPT, regular</option>
+        <option value="premium">Premium</option>
+      </select>
+    </label>
+    <label>Received in the last
+      <select id="f-range">
+        <option value="90">3 months</option>
+        <option value="180" selected>6 months</option>
+        <option value="365">12 months</option>
+        <option value="0">All time</option>
+      </select>
+    </label>
+  </div>
+
+  <section aria-labelledby="sc-title">
+    <h2 id="sc-title">Days to decision, by date received</h2>
+    <div class="legend" aria-hidden="true">
+      <span><i class="k k-s1"></i>OPT</span>
+      <span><i class="k k-s2"></i>STEM OPT</span>
+      <span><i class="k k-s3 k-diamond"></i>Premium</span>
+      <span><i class="k k-hollow"></i>Still waiting</span>
+    </div>
+    <div class="chart" id="scatter"></div>
+  </section>
+
+  <section aria-labelledby="ln-title">
+    <h2 id="ln-title">Everyone's timeline</h2>
+    <div class="legend" aria-hidden="true">
+      <span><i class="k k-line"></i>Waiting for a decision</span>
+      <span><i class="k k-dash"></i>Still waiting</span>
+      <span><i class="k k-filled"></i>Decision</span>
+      <span><i class="k k-card"></i>Card produced</span>
+      <span><i class="k k-ring"></i>Card delivered</span>
+      <span><i class="k k-silent"></i>Silent update</span>
+    </div>
+    <div class="chart" id="lanes"></div>
+    <button type="button" class="more" id="more" hidden>Show more people</button>
+  </section>
+
+  <details class="decoder" id="decoder">
+    <summary>Decode your own silent update</summary>
+    <p>A silent update is when the case data behind your myUSCIS account changes but the status message doesn't. Paste that data (JSON) here to read it. It stays in this page and is never sent anywhere.</p>
+    <label class="vh" for="json-in">Case JSON</label>
+    <textarea id="json-in" rows="5" spellcheck="false" placeholder='{"data": { ... }}'></textarea>
+    <div class="decoder-actions"><button type="button" id="json-read">Read it</button><button type="button" id="json-clear">Clear</button></div>
+    <div id="json-out" aria-live="polite"></div>
+  </details>
+</main>
+
+<footer class="wrap foot">
+  <p>Hover over any mark for dates, and click it to open the Reddit comment it came from.</p>
+  <p id="sources"></p>
+  <p>Community data, not legal advice. Not affiliated with USCIS or Reddit.</p>
+</footer>
+
+<script type="module" src="js/app.js"></script>
+</body>
+</html>
