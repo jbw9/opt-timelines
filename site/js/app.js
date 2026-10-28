@@ -1,6 +1,7 @@
 import { addDays, daysBetween, isoDate } from './dates.js';
-import { fmtDate, lanes, scatter } from './charts.js';
-import { CATEGORIES, approvalFront, cardTimes, category, recentDecisions, summarize, usable } from './stats.js';
+import { fmtDate, lanes, rangeBars, scatter } from './charts.js';
+import { businessDaysBetween } from './business-days.js';
+import { CATEGORIES, approvalFront, cardTimes, category, clockStart, decidedOn, recentDecisions, summarize, usable } from './stats.js';
 import { mountDecoder } from './silent.js';
 
 const $ = (sel) => document.querySelector(sel);
@@ -76,12 +77,11 @@ function tile(label, value, sub, cat) {
 
 function renderTiles() {
   const t = today();
-  const tiles = CATEGORIES.map(({ id, short }) => {
-    const rec = recentDecisions(state.reports, id, t);
-    if (!rec?.n) return tile(short, '—', 'Not enough recent reports', id);
-    const front = id === 'premium' ? null : approvalFront(state.reports, id, t);
-    return tile(short, `${round(rec.median)} days`,
-      [`Most ${round(rec.p25)}–${round(rec.p75)}`, front?.median ? `. Now approving cases received around ${fmtDate(front.median)}` : ''], id);
+  const tiles = CATEGORIES.filter(({ id }) => id !== 'premium').map(({ id, short }) => {
+    const front = approvalFront(state.reports, id, t);
+    return front?.median
+      ? tile(`${short} approvals are for cases received`, fmtDate(front.median), `Mostly ${fmtDate(front.from)} to ${fmtDate(front.to)}, from approvals in the last ${front.windowDays} days`, id)
+      : tile(`${short} approvals are for cases received`, '—', 'Not enough recent approvals', id);
   });
   const card = cardTimes(state.reports).toCard;
   const silent = summarize(state.reports.filter((r) => usable(r) && r.events.silent_update && r.events.approved >= r.events.silent_update)
@@ -89,6 +89,29 @@ function renderTiles() {
   tiles.push(tile('Silent update to approval', silent.n ? `${round(silent.median)} days` : '—', silent.n ? `Most ${round(silent.p25)}–${round(silent.p75)}, from ${plural(silent.n, 'person', 'people')}` : 'Not enough reports'));
   tiles.push(tile('Approval to card', card.n ? `${round(card.median)} days` : '—', card.n ? `Most ${round(card.p25)}–${round(card.p75)}` : 'Not enough reports'));
   $('#tiles').replaceChildren(...tiles);
+}
+
+// Regular counts from the received date, premium from the day USCIS got the
+// premium request (or the received date when it was filed together).
+function renderPremium() {
+  const t = today();
+  const groups = [['opt', 'OPT'], ['stem', 'STEM OPT']];
+  const rows = groups.flatMap(([type, name]) => {
+    const ofType = state.reports.filter((r) => (r.type === 'stem') === (type === 'stem'));
+    const reg = recentDecisions(ofType, type, t);
+    const prem = recentDecisions(ofType, 'premium', t);
+    const business = prem?.n ? summarize(prem.reports.map((r) => businessDaysBetween(clockStart(r), decidedOn(r)))).median : null;
+    return [
+      { cat: type, label: `${name}, regular`, ...reg, value: reg?.n ? `${round(reg.median)} days` : '' },
+      { cat: 'premium', label: `${name}, premium`, ...prem, value: prem?.n ? `${round(prem.median)} days (${round(business)} business)` : '' },
+    ];
+  });
+  rangeBars($('#ranges'), rows);
+
+  const [optReg, optPrem] = rows;
+  $('#pp-sub').textContent = optReg.n && optPrem.n
+    ? `Recent OPT decisions: ${round(optPrem.median)} days with premium, counted from the upgrade, vs ${round(optReg.median)} days regular. Premium costs $1,780 and USCIS must act within 30 business days. Bars show the middle half of decisions in the last ${Math.max(optReg.windowDays, optPrem.windowDays)} days.`
+    : '';
 }
 
 function renderCharts() {
@@ -111,6 +134,7 @@ function renderSources() {
 function renderAll() {
   renderFreshness();
   renderTiles();
+  renderPremium();
   renderCharts();
   renderSources();
 }
@@ -134,7 +158,7 @@ window.addEventListener('resize', () => {
   if (window.innerWidth === lastWidth) return;
   lastWidth = window.innerWidth;
   clearTimeout(resizeTimer);
-  resizeTimer = setTimeout(renderCharts, 150);
+  resizeTimer = setTimeout(() => { renderPremium(); renderCharts(); }, 150);
 });
 
 mountDecoder($('#decoder'));

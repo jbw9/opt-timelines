@@ -255,3 +255,37 @@ export function lanes(wrap, { reports, onOpen }) {
   // The whole row is the hit target.
   attachHover(svg, tip, points, onOpen, (pts, px, py) => (py >= top && px >= 0 ? pts[Math.floor((py - top) / rowH)] ?? null : null));
 }
+
+/**
+ * Regular vs premium: one row per group, a bar over the middle half of recent
+ * decisions with the median marked. Premium rows draw a diamond, like the
+ * other charts, so the comparison doesn't rest on color alone.
+ */
+export function rangeBars(wrap, rows) {
+  wrap.replaceChildren();
+  const W = Math.max(320, wrap.clientWidth);
+  const narrow = W < 560;
+  const left = narrow ? 8 : 150;
+  const rowH = narrow ? 56 : 40;
+  const H = rows.length * rowH + 28;
+  const maxX = Math.max(60, Math.ceil(Math.max(...rows.map((r) => r.p75 ?? 0)) / 30) * 30 + 30);
+  const x = linear(0, maxX, left, W - (narrow ? 16 : 150));
+  const svg = el('svg', { viewBox: `0 0 ${W} ${H}`, width: W, height: H, role: 'img', 'aria-label': 'Days to decision, regular vs premium processing' }, wrap);
+  for (let d = 0; d <= maxX; d += 30) {
+    el('line', { x1: x(d), x2: x(d), y1: 0, y2: H - 22, class: d ? 'grid' : 'axis' }, svg);
+    text(svg, x(d), H - 6, d ? String(d) : '0 days', { class: 'tick', 'text-anchor': d ? 'middle' : 'start' });
+  }
+  rows.forEach((r, i) => {
+    const cy = i * rowH + (narrow ? 38 : 20);
+    text(svg, narrow ? left : 0, narrow ? cy - 14 : cy + 5, r.label, { class: 'row-label' });
+    if (r.median == null) {
+      text(svg, x(0) + 6, cy + 4, 'not enough recent reports', { class: 'tick' });
+      return;
+    }
+    const color = SERIES[r.cat];
+    el('rect', { x: x(r.p25), y: cy - 5, width: Math.max(4, x(r.p75) - x(r.p25)), height: 10, rx: 5, fill: color, opacity: 0.35 }, svg);
+    if (r.cat === 'premium') marker(svg, 'premium', x(r.median), cy, true).setAttribute('transform', `translate(${x(r.median)} ${cy}) scale(1.3) translate(${-x(r.median)} ${-cy})`);
+    else el('circle', { cx: x(r.median), cy, r: 6, fill: color, stroke: 'var(--surface)', 'stroke-width': 2 }, svg);
+    text(svg, x(r.p75) + 10, cy + 5, r.value, { class: 'value' });
+  });
+}
