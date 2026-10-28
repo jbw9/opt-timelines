@@ -73,7 +73,13 @@
 
   <details class="decoder" id="decoder">
     <summary>Decode your own silent update</summary>
-    <p>A silent update is when the case data behind your myUSCIS account changes but the status message doesn't. Paste that data (JSON) here to read it. It stays in this page and is never sent anywhere.</p>
+    <p>A silent update is when the case data behind your myUSCIS account changes but the status message doesn't. It often comes a few days before an approval, but it isn't one.</p>
+    <ol>
+      <li>Sign in at <a href="https://my.uscis.gov" target="_blank" rel="noopener">my.uscis.gov</a>.</li>
+      <li>In the same browser, open <code>https://my.uscis.gov/account/case-service/api/cases/</code> followed by your receipt number, for example <code>…/cases/IOE0912345678</code>.</li>
+      <li>You'll see a page of text (JSON). Copy all of it and paste it below. It stays in this page and is never sent anywhere.</li>
+    </ol>
+    <p>Check the <code>updatedAt</code> time: if it changed but your status message didn't, that's a silent update.</p>
     <label class="vh" for="json-in">Case JSON</label>
     <textarea id="json-in" rows="5" spellcheck="false" placeholder='{"data": { ... }}'></textarea>
     <div class="decoder-actions"><button type="button" id="json-read">Read it</button><button type="button" id="json-clear">Clear</button></div>

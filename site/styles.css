@@ -129,7 +129,10 @@ section.first h2 { margin-top: 8px; }
 
 .decoder { margin-top: 40px; border: 1px solid var(--rule); border-radius: 6px; background: var(--surface); padding: 0 16px; max-width: 760px; }
 .decoder summary { cursor: pointer; padding: 14px 0; font-weight: 600; }
-.decoder p { font-size: 15px; color: var(--ink-2); }
+.decoder p, .decoder ol { font-size: 15px; color: var(--ink-2); }
+.decoder ol { padding-left: 1.3em; margin: 0 0 10px; }
+.decoder li { margin-bottom: 4px; }
+.decoder code { font-size: 13px; background: var(--paper); border: 1px solid var(--rule); border-radius: 4px; padding: 1px 4px; overflow-wrap: anywhere; }
 .decoder textarea { width: 100%; font: 14px/1.4 var(--font); color: var(--ink); background: var(--paper); border: 1px solid var(--rule); border-radius: 6px; padding: 10px; resize: vertical; }
 .decoder-actions { display: flex; gap: 10px; margin: 10px 0 16px; }
 .decoder-actions button { font: 600 15px var(--font); border-radius: 6px; padding: 8px 16px; cursor: pointer; border: 1.5px solid var(--ink); background: var(--surface); color: var(--ink); }
